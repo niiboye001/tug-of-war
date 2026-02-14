@@ -1,0 +1,204 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: radial-gradient(circle at center, #ffffff 0%, #e0e7ff 100%);
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background elements for extra juice */
+.container::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background-image: radial-gradient(#4f46e5 0.5px, transparent 0.5px);
+    background-size: 24px 24px;
+    opacity: 0.1;
+    transform: rotate(15deg);
+    top: -50%;
+    left: -50%;
+}
+
+.title {
+    font-size: 3rem;
+    /* Drastic reduction from 6rem */
+    font-weight: 950;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    text-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleFloat 4s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    /* Reduced from 2rem */
+    color: #64748b;
+    margin-bottom: 3rem;
+    font-weight: 600;
+}
+
+.selectionGroups {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+    z-index: 1;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.selectionColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+}
+
+.toggleGroup {
+    display: flex;
+    background: white;
+    padding: 0.2rem;
+    border-radius: 100px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.toggleBtn {
+    padding: 0.4rem 1.25rem;
+    border: none;
+    background: transparent;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.toggleBtn:hover {
+    color: #64748b;
+}
+
+.active {
+    background: #f1f5f9;
+    color: #4f46e5;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.cardContainer {
+    display: flex;
+    gap: 2.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    z-index: 1;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 18rem;
+    height: 22rem;
+    border-radius: 2rem;
+    background: white;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+    border: 3px solid white;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.iconWrapper {
+    margin-bottom: 2rem;
+    color: white;
+    z-index: 1;
+    animation: iconBounce 3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes iconBounce {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(0);
+    }
+
+    50% {
+        transform: translateY(-10px) rotate(5deg);
+    }
+}
+
+.cardTitle {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: white;
+    z-index: 1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.math {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.english {
+    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+}
+
+.card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover::after {
+    opacity: 1;
+}

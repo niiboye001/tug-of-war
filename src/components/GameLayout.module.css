@@ -1,0 +1,66 @@
+.container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #f0f4f8;
+}
+
+.panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    z-index: 10;
+    transition: transform 0.3s ease;
+}
+
+.shake {
+    animation: screenShake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+@keyframes screenShake {
+
+    10%,
+    90% {
+        transform: translate3d(-3px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(6px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-8px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(8px, 0, 0);
+    }
+}
+
+.leftPanel {
+    background-color: rgba(66, 133, 244, 0.1);
+    border-right: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.rightPanel {
+    background-color: rgba(234, 67, 53, 0.1);
+    border-left: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.centerPanel {
+    flex: 2;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    z-index: 5;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}

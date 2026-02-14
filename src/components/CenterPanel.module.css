@@ -1,0 +1,240 @@
+.container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 1rem;
+}
+
+.scoreBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.6rem 1.5rem;
+    border-radius: 1.25rem;
+    background: #f8f9fa;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.teamLabel {
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #64748b;
+    letter-spacing: 0.1em;
+}
+
+.space .teamLabel {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.score {
+    font-size: 3rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.blue .score {
+    color: #4285F4;
+}
+
+.red .score {
+    color: #EA4335;
+}
+
+.timerContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.homeIconBtn {
+    background: white;
+    border: none;
+    border-radius: 50%;
+    width: 3.5rem;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #64748b;
+    transition: all 0.2s ease;
+}
+
+.homeIconBtn:hover {
+    color: #e63946;
+    background: #fff5f5;
+    transform: scale(1.1);
+}
+
+.timer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #1e293b;
+    padding: 0.6rem 1.25rem;
+    background: #fff;
+    border-radius: 3rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.park {
+    background: radial-gradient(circle at center, #ffffff 0%, #e8f5e9 100%);
+}
+
+.space {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    color: white;
+}
+
+.space .field {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+.space .timer,
+.space .homeIconBtn,
+.space .scoreBox {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.space .timer span,
+.space .score,
+.space .homeIconBtn {
+    color: white !important;
+}
+
+.arctic {
+    background: linear-gradient(180deg, #f0f9ff 0%, #e0f2fe 100%);
+}
+
+.arctic .field {
+    background: rgba(255, 255, 255, 0.5);
+    background-image: radial-gradient(#bae6fd 2px, transparent 2px);
+    background-size: 30px 30px;
+}
+
+.field {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    overflow: hidden;
+    transition: all 0.5s ease;
+}
+
+.ropeContainer {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    transform: translateY(-50%);
+}
+
+.ropeLine {
+    width: 100%;
+    height: 1.2rem;
+    background: repeating-linear-gradient(45deg,
+            #d35400,
+            #d35400 20px,
+            #e67e22 20px,
+            #e67e22 40px);
+    border-radius: 1rem;
+    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.tension {
+    box-shadow: 0 0 15px #ff4444, 0 8px 8px rgba(0, 0, 0, 0.2);
+    animation: ropeVibration 0.1s infinite;
+}
+
+@keyframes ropeVibration {
+    0% {
+        transform: translateY(-1px);
+    }
+
+    50% {
+        transform: translateY(1px);
+    }
+
+    100% {
+        transform: translateY(-1px);
+    }
+}
+
+.ropeKnot {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.3));
+}
+
+.centerMarker {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 2px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-left: 2px dashed rgba(0, 0, 0, 0.2);
+}
+
+.teamGroup {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    gap: -0.5rem;
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Hands are at y=75/150 (exactly middle). Char height is 9rem. */
+    /* So we offset by exactly half (4.5rem) to center hands on the 50% line. */
+    margin-top: -4.5rem;
+}
+
+.bluePuller {
+    color: #4285F4;
+    transform: scaleX(-1);
+}
+
+.redPuller {
+    color: #EA4335;
+}
+
+/* Scaled Char SVGs */
+.teamGroup div svg {
+    width: 7rem;
+    height: 9rem;
+}
+
+/* Simple pull animation */
+@keyframes pull {
+
+    0%,
+    100% {
+        transform: scaleX(-1) rotate(0deg);
+    }
+
+    50% {
+        transform: scaleX(-1) rotate(-10deg);
+    }
+}
+
+/* We could add classes to animate pulling when active */

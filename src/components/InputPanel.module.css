@@ -1,0 +1,80 @@
+.keypadGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 32rem;
+    /* Increased significantly */
+    margin: 1rem auto 0;
+}
+
+.key {
+    aspect-ratio: 1.2;
+    background-color: white;
+    border-radius: 1rem;
+    font-size: 1.8rem;
+    /* Scaled up */
+    font-weight: 800;
+    color: #1e293b;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.1s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.key:active {
+    transform: scale(0.92);
+    background-color: #f1f5f9;
+}
+
+.actionKey {
+    color: white;
+    border: none;
+}
+
+.delete {
+    background-color: #f97316;
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+.submit {
+    background-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* English Mode Styles */
+.optionGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    width: 100%;
+    max-width: 45rem;
+    margin: 0 auto;
+}
+
+.optionBtn {
+    padding: 1.5rem 1rem;
+    background-color: white;
+    border-radius: 1.5rem;
+    font-size: 1.4rem;
+    /* Scaled up */
+    font-weight: 800;
+    color: #1e293b;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.1s;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 5rem;
+}
+
+.optionBtn:active {
+    transform: scale(0.96);
+    background-color: #f1f5f9;
+}

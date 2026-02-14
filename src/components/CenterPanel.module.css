@@ -37,7 +37,7 @@
 }
 
 .score {
-    font-size: 3rem;
+    font-size: clamp(1.5rem, 6vh, 3rem);
     font-weight: 900;
     line-height: 1;
 }
@@ -60,8 +60,8 @@
     background: white;
     border: none;
     border-radius: 50%;
-    width: 3.5rem;
-    height: 3.5rem;
+    width: clamp(2.5rem, 5vw, 3.5rem);
+    height: clamp(2.5rem, 5vw, 3.5rem);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -81,10 +81,10 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    font-size: 1.5rem;
+    font-size: clamp(1rem, 3vw, 1.5rem);
     font-weight: 900;
     color: #1e293b;
-    padding: 0.6rem 1.25rem;
+    padding: 0.4rem 1rem;
     background: #fff;
     border-radius: 3rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -150,14 +150,30 @@
 
 .ropeLine {
     width: 100%;
-    height: 1.2rem;
-    background: repeating-linear-gradient(45deg,
-            #d35400,
-            #d35400 20px,
-            #e67e22 20px,
-            #e67e22 40px);
+    height: 0.8rem;
+    /* Layer 1: Base Hemp Color */
+    background-color: #cd853f;
+    /* Layer 2 & 3: Braided Texture via Opposing Diagonal Gradients */
+    background-image:
+        repeating-linear-gradient(45deg,
+            transparent,
+            transparent 10px,
+            rgba(0, 0, 0, 0.1) 10px,
+            rgba(0, 0, 0, 0.1) 20px),
+        repeating-linear-gradient(-45deg,
+            transparent,
+            transparent 10px,
+            rgba(255, 255, 255, 0.05) 10px,
+            rgba(255, 255, 255, 0.05) 20px),
+        /* Layer 4: Cylindrical 3D Lighting (Shade + Highlight) */
+        linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.3) 0%,
+            transparent 40%,
+            rgba(255, 255, 255, 0.4) 50%,
+            transparent 60%,
+            rgba(0, 0, 0, 0.3) 100%);
     border-radius: 1rem;
-    box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
 
@@ -204,9 +220,7 @@
     display: flex;
     gap: -0.5rem;
     transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
-    /* Hands are at y=75/150 (exactly middle). Char height is 9rem. */
-    /* So we offset by exactly half (4.5rem) to center hands on the 50% line. */
-    margin-top: -4.5rem;
+    /* Hands are centered via inline transform in CenterPanel.tsx to avoid override conflicts */
 }
 
 .bluePuller {
@@ -220,8 +234,8 @@
 
 /* Scaled Char SVGs */
 .teamGroup div svg {
-    width: 7rem;
-    height: 9rem;
+    width: clamp(4rem, 10vw, 7rem);
+    height: clamp(6rem, 15vh, 9rem);
 }
 
 /* Simple pull animation */

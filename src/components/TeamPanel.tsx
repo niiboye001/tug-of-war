@@ -34,9 +34,11 @@ const TeamPanel: React.FC<TeamPanelProps> = ({
             const newProblem = generateProblem(gameMode, difficulty, newUsedWords);
             setProblem(newProblem);
 
-            if (gameMode === 'english') {
-                const word = newProblem.question.replace('_', newProblem.answer);
-                setUsedWords([word]);
+            if (gameMode !== 'math') {
+                const identifier = gameMode === 'english'
+                    ? newProblem.question.replace('_', newProblem.answer)
+                    : newProblem.question;
+                setUsedWords([identifier]);
             }
 
             setUserInput('');
@@ -103,7 +105,7 @@ const TeamPanel: React.FC<TeamPanelProps> = ({
     const handleInput = (val: string) => {
         if (feedback !== 'none') return;
 
-        if (gameMode === 'english') {
+        if (gameMode !== 'math') {
             if (val === problem.answer) {
                 handleCorrect();
             } else {
@@ -138,9 +140,11 @@ const TeamPanel: React.FC<TeamPanelProps> = ({
             const newProblem = generateProblem(gameMode, difficulty, usedWords);
             setProblem(newProblem);
 
-            if (gameMode === 'english') {
-                const word = newProblem.question.replace('_', newProblem.answer);
-                setUsedWords(prev => [...prev, word]);
+            if (gameMode !== 'math') {
+                const identifier = gameMode === 'english'
+                    ? newProblem.question.replace('_', newProblem.answer)
+                    : newProblem.question;
+                setUsedWords(prev => [...prev, identifier]);
             }
 
             setUserInput('');
@@ -158,9 +162,11 @@ const TeamPanel: React.FC<TeamPanelProps> = ({
             const newProblem = generateProblem(gameMode, difficulty, usedWords);
             setProblem(newProblem);
 
-            if (gameMode === 'english') {
-                const word = newProblem.question.replace('_', newProblem.answer);
-                setUsedWords(prev => [...prev, word]);
+            if (gameMode !== 'math') {
+                const identifier = gameMode === 'english'
+                    ? newProblem.question.replace('_', newProblem.answer)
+                    : newProblem.question;
+                setUsedWords(prev => [...prev, identifier]);
             }
 
             setUserInput('');

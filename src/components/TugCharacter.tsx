@@ -122,9 +122,9 @@ const TugCharacter: React.FC<TugCharacterProps> = ({ team, className, theme = 'p
 
             {/* Hands */}
             {/* Back Hand (gripping further forward) */}
-            <circle cx="75" cy="75" r="7" fill={skinTone} />
+            <circle cx="75" cy="75" r="10" fill={skinTone} />
             {/* Front Hand (gripping closer) */}
-            <circle cx="68" cy="75" r="7" fill={skinTone} />
+            <circle cx="68" cy="75" r="10" fill={skinTone} />
 
         </svg>
     );

@@ -155,7 +155,7 @@ const CenterPanel: React.FC<CenterPanelProps> = ({
                     className={`${styles.teamGroup} ${styles.groupLeft} ${bluePower ? styles.powerGlowBlue : ''}`}
                     animate={{ right: `${100 - visualPos}%` }}
                     transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                    style={{ transform: 'translateX(-50px)' }}
+                    style={{ transform: 'translateY(-50%) translateX(-50px)' }}
                 >
                     {[...Array(3)].map((_, i) => (
                         <motion.div key={i} variants={pullVariant} animate="pull" style={{ margin: '0 -15px' }}>
@@ -183,7 +183,7 @@ const CenterPanel: React.FC<CenterPanelProps> = ({
                     className={`${styles.teamGroup} ${styles.groupRight} ${redPower ? styles.powerGlowRed : ''}`}
                     animate={{ left: `${visualPos}%` }}
                     transition={{ type: "spring", stiffness: 100, damping: 20 }}
-                    style={{ transform: 'translateX(50px)' }}
+                    style={{ transform: 'translateY(-50%) translateX(50px)' }}
                 >
                     {[...Array(3)].map((_, i) => (
                         <motion.div key={i} variants={pullVariantRight} animate="pull" style={{ margin: '0 -15px' }}>

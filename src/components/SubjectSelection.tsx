@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './SubjectSelection.module.css';
-import { BookOpen, Calculator, Brain, Trees, Rocket, Snowflake, Palette, Users, User } from 'lucide-react';
+import { BookOpen, Calculator, Brain, Trees, Rocket, Snowflake, Palette, Users, User, Globe, FlaskConical } from 'lucide-react';
 import { playClick } from '../utils/sound';
 import { type GameMode, type Difficulty, type Theme } from '../utils/gameLogic';
 import { motion } from 'framer-motion';
@@ -111,6 +111,32 @@ const SubjectSelection: React.FC<SubjectSelectionProps> = ({ onSelect }) => {
                     </div>
                     <h3>English</h3>
                     <p>Vocabulary and Spelling fun!</p>
+                </motion.div>
+
+                <motion.div
+                    className={styles.card}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleSelect('geography')}
+                >
+                    <div className={`${styles.cardIcon} ${styles.greenIcon}`}>
+                        <Globe size={48} />
+                    </div>
+                    <h3>Geography</h3>
+                    <p>World Capitals and Continents!</p>
+                </motion.div>
+
+                <motion.div
+                    className={styles.card}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleSelect('science')}
+                >
+                    <div className={`${styles.cardIcon} ${styles.purpleIcon}`}>
+                        <FlaskConical size={48} />
+                    </div>
+                    <h3>Science</h3>
+                    <p>Elements, Planets, and Life!</p>
                 </motion.div>
             </div>
         </div>

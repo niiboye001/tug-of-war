@@ -3,10 +3,11 @@ import styles from './InputPanel.module.css';
 import { Delete, Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { playClick } from '../utils/sound';
+import { type GameMode } from '../utils/gameLogic';
 
 interface InputPanelProps {
-    mode: 'math' | 'english';
-    options?: string[]; // For English mode
+    mode: GameMode;
+    options?: string[]; // For modes with choices
     onInput: (value: string) => void;
     onDelete: () => void;
     onSubmit: () => void;

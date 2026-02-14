@@ -7,8 +7,9 @@ import WinnerScreen from './components/WinnerScreen';
 import type { GameMode, Difficulty, Theme, PowerUp, PowerUpType, Side } from './utils/gameLogic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { bgm, playCrowdCheer } from './utils/sound';
+import CountdownOverlay from './components/CountdownOverlay';
 
-type GameState = 'selection' | 'playing' | 'ended';
+type GameState = 'selection' | 'countdown' | 'playing' | 'ended';
 
 function App() {
   const [gameState, setGameState] = useState<GameState>('selection');
@@ -26,6 +27,7 @@ function App() {
   const [isShaking, setIsShaking] = useState(false);
   const [isNewStreakRecord, setIsNewStreakRecord] = useState(false);
   const [isNewTimeRecord, setIsNewTimeRecord] = useState(false);
+  const [countdown, setCountdown] = useState<number | 'GO!' | null>(null);
 
   // Power-up State
   const [bluePowerUps, setBluePowerUps] = useState<PowerUp[]>([]);
@@ -49,6 +51,29 @@ function App() {
     }
     return () => clearInterval(interval);
   }, [gameState, timeLeft]);
+
+  // Countdown Logic
+  useEffect(() => {
+    if (countdown === null) return;
+
+    if (countdown === 'GO!') {
+      const timer = setTimeout(() => {
+        setCountdown(null);
+        setGameState('playing');
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+
+    const timer = setTimeout(() => {
+      if (countdown === 1) {
+        setCountdown('GO!');
+      } else {
+        setCountdown((countdown as number) - 1);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [countdown]);
 
   // Power-up Timer/Cooldown
   useEffect(() => {
@@ -97,9 +122,10 @@ function App() {
     setDifficulty(diff);
     setTheme(thm);
     setIsSolo(solo);
-    setGameState('playing');
     resetGame();
     resetGameStates();
+    setGameState('countdown'); // Switch to game arena immediately
+    setCountdown(3);
   };
 
   const resetGame = () => {
@@ -290,6 +316,11 @@ function App() {
               />
             )}
           </motion.div>
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {countdown !== null && (
+          <CountdownOverlay count={countdown} />
         )}
       </AnimatePresence>
     </div>

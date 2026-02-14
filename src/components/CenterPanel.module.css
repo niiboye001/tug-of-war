@@ -238,3 +238,70 @@
 }
 
 /* We could add classes to animate pulling when active */
+
+.powerLabel {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    font-weight: 900;
+    z-index: 10;
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.bluePower {
+    color: #4285F4;
+}
+
+.redPower {
+    color: #EA4335;
+}
+
+.effectOverlay {
+    position: absolute;
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 900;
+    font-size: 1.25rem;
+    z-index: 20;
+    pointer-events: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    backdrop-filter: blur(2px);
+}
+
+.blueFrozen,
+.blueShield {
+    left: 10%;
+    top: 30%;
+}
+
+.redFrozen,
+.redShield {
+    right: 10%;
+    top: 30%;
+}
+
+.blueFrozen,
+.redFrozen {
+    background: rgba(59, 130, 246, 0.9);
+    color: white;
+    border: 2px solid #93c5fd;
+}
+
+.blueShield,
+.redShield {
+    background: rgba(16, 185, 129, 0.9);
+    color: white;
+    border: 2px solid #6ee7b7;
+}
+
+.powerGlowBlue {
+    filter: drop-shadow(0 0 15px #4285F4);
+}
+
+.powerGlowRed {
+    filter: drop-shadow(0 0 15px #EA4335);
+}

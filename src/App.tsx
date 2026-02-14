@@ -4,7 +4,7 @@ import TeamPanel from './components/TeamPanel';
 import CenterPanel from './components/CenterPanel';
 import SubjectSelection from './components/SubjectSelection';
 import WinnerScreen from './components/WinnerScreen';
-import type { GameMode, Difficulty, Theme } from './utils/gameLogic';
+import type { GameMode, Difficulty, Theme, PowerUp, PowerUpType, Side } from './utils/gameLogic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { bgm, playCrowdCheer } from './utils/sound';
 
@@ -27,6 +27,11 @@ function App() {
   const [isNewStreakRecord, setIsNewStreakRecord] = useState(false);
   const [isNewTimeRecord, setIsNewTimeRecord] = useState(false);
 
+  // Power-up State
+  const [bluePowerUps, setBluePowerUps] = useState<PowerUp[]>([]);
+  const [redPowerUps, setRedPowerUps] = useState<PowerUp[]>([]);
+  const [activePowerUps, setActivePowerUps] = useState<{ [key in Side]: PowerUpType | null }>({ blue: null, red: null });
+
   // Game Timer
   useEffect(() => {
     let interval: number;
@@ -44,6 +49,16 @@ function App() {
     }
     return () => clearInterval(interval);
   }, [gameState, timeLeft]);
+
+  // Power-up Timer/Cooldown
+  useEffect(() => {
+    if (activePowerUps.blue || activePowerUps.red) {
+      const timer = setTimeout(() => {
+        setActivePowerUps({ blue: null, red: null });
+      }, 5000); // Power-ups last 5 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [activePowerUps]);
 
   // AI Opponent Logic
   useEffect(() => {
@@ -95,6 +110,9 @@ function App() {
     setWinner('Draw');
     setBlueStreak(0);
     setRedStreak(0);
+    setBluePowerUps([]);
+    setRedPowerUps([]);
+    setActivePowerUps({ blue: null, red: null });
   };
 
   const endGame = () => {
@@ -126,11 +144,19 @@ function App() {
   };
 
   const handleCorrectAnswer = (team: 'blue' | 'red') => {
-    // Note: streak state might be slightly behind if called directly 
-    // but effectively it works because handleCorrectAnswer is called AFTER setStreak in the panel
+    const opponent = team === 'blue' ? 'red' : 'blue';
     const currentStreak = team === 'blue' ? blueStreak : redStreak;
-    const multiplier = currentStreak >= 3 ? 2 : 1;
-    const pullStrength = 5 * multiplier;
+
+    // Check if opponent has a SHIELD
+    if (activePowerUps[opponent] === 'shield') {
+      setActivePowerUps(prev => ({ ...prev, [opponent]: null }));
+      // Pulse the shield visually or play a sound could be added here
+      return;
+    }
+
+    const streakMultiplier = currentStreak >= 3 ? 2 : 1;
+    const powerMultiplier = activePowerUps[team] === 'double_pull' ? 2 : 1;
+    const pullStrength = 5 * streakMultiplier * powerMultiplier;
 
     if (team === 'blue') {
       setTeam1Score((prev) => prev + 1);
@@ -144,6 +170,34 @@ function App() {
       playCrowdCheer();
       setIsShaking(true);
       setTimeout(() => setIsShaking(false), 500);
+    }
+
+    // Grant Power-up every 5 correct answers
+    const currentScore = team === 'blue' ? team1Score + 1 : team2Score + 1;
+    if (currentScore > 0 && currentScore % 5 === 0) {
+      grantPowerUp(team);
+    }
+  };
+
+  const grantPowerUp = (side: Side) => {
+    const types: PowerUpType[] = ['freeze', 'shield', 'double_pull'];
+    const randomType = types[Math.floor(Math.random() * types.length)];
+    const newPowerUp = { id: Math.random().toString(36).substr(2, 9), type: randomType };
+
+    if (side === 'blue') setBluePowerUps(prev => [...prev.slice(-2), newPowerUp]); // Limit to 3
+    else setRedPowerUps(prev => [...prev.slice(-2), newPowerUp]);
+  };
+
+  const activatePowerUp = (side: Side, powerUp: PowerUp) => {
+    // Remove from inventory
+    if (side === 'blue') setBluePowerUps(prev => prev.filter(p => p.id !== powerUp.id));
+    else setRedPowerUps(prev => prev.filter(p => p.id !== powerUp.id));
+
+    // Special case for 'freeze': affects the OTHER side
+    if (powerUp.type === 'freeze') {
+      setActivePowerUps(prev => ({ ...prev, [side === 'blue' ? 'red' : 'blue']: 'freeze' }));
+    } else {
+      setActivePowerUps(prev => ({ ...prev, [side]: powerUp.type }));
     }
   };
 
@@ -187,7 +241,9 @@ function App() {
                     difficulty={difficulty}
                     onCorrectAnswer={() => handleCorrectAnswer('blue')}
                     onStreak={(s: number) => setBlueStreak(s)}
-                    isActive={gameState === 'playing'}
+                    isActive={gameState === 'playing' && activePowerUps.blue !== 'freeze'}
+                    powerUps={bluePowerUps}
+                    onActivatePowerUp={(p) => activatePowerUp('blue', p)}
                   />
                 }
                 centerPanel={
@@ -198,8 +254,12 @@ function App() {
                     team1Score={team1Score}
                     team2Score={team2Score}
                     onHome={handleHome}
-                    bluePower={blueStreak >= 3}
-                    redPower={redStreak >= 3}
+                    bluePower={blueStreak >= 3 || activePowerUps.blue === 'double_pull'}
+                    redPower={redStreak >= 3 || activePowerUps.red === 'double_pull'}
+                    blueFrozen={activePowerUps.blue === 'freeze'}
+                    redFrozen={activePowerUps.red === 'freeze'}
+                    blueShield={activePowerUps.blue === 'shield'}
+                    redShield={activePowerUps.red === 'shield'}
                   />
                 }
                 rightPanel={
@@ -209,8 +269,10 @@ function App() {
                     difficulty={difficulty}
                     onCorrectAnswer={() => handleCorrectAnswer('red')}
                     onStreak={(s: number) => setRedStreak(s)}
-                    isActive={gameState === 'playing' && !isSolo}
+                    isActive={gameState === 'playing' && !isSolo && activePowerUps.red !== 'freeze'}
                     isSolo={isSolo}
+                    powerUps={redPowerUps}
+                    onActivatePowerUp={(p) => activatePowerUp('red', p)}
                   />
                 }
               />

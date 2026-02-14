@@ -28,7 +28,9 @@
 
 .trophy {
     color: #FFD700;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    width: clamp(80px, 20vh, 140px);
+    height: auto;
     filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.6));
     animation: float 3s ease-in-out infinite;
 }
@@ -48,8 +50,7 @@
 }
 
 .teamName {
-    font-size: 4.5rem;
-    /* Reduced from 6rem */
+    font-size: clamp(2.5rem, 10vh, 4.5rem);
     font-weight: 950;
     margin: 0;
     text-shadow: 0 8px 12px rgba(0, 0, 0, 0.3);
@@ -57,18 +58,17 @@
 }
 
 .subtitle {
-    font-size: 2rem;
-    /* Reduced from 3rem */
+    font-size: clamp(1.25rem, 4vh, 2rem);
     font-weight: 600;
-    margin: 0.5rem 0 2.5rem 0;
+    margin: 0.25rem 0 1.5rem 0;
     opacity: 0.9;
 }
 
 .statsRow {
     display: flex;
     align-items: center;
-    gap: 4rem;
-    margin-bottom: 3rem;
+    gap: clamp(1rem, 5vw, 4rem);
+    margin-bottom: 2rem;
 }
 
 .statItem {
@@ -80,19 +80,18 @@
 
 .iconCircle {
     background: white;
-    width: 4.5rem;
-    height: 4.5rem;
+    width: clamp(3rem, 8vh, 4.5rem);
+    height: clamp(3rem, 8vh, 4.5rem);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .statValue {
-    font-size: 3rem;
-    /* Reduced from 4rem */
+    font-size: clamp(1.5rem, 6vh, 3rem);
     font-weight: 900;
     line-height: 1;
 }
@@ -132,21 +131,18 @@
 .playAgainBtn {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem 3.5rem;
-    /* Reduced */
-    font-size: 1.5rem;
-    /* Reduced */
+    gap: 0.75rem;
+    padding: 0.75rem 2.5rem;
+    font-size: clamp(1rem, 3vh, 1.5rem);
     font-weight: 900;
     color: white;
     background: #3498db;
     border: none;
-    border-radius: 1.5rem;
+    border-radius: 1rem;
     cursor: pointer;
-    box-shadow: 0 15px 25px rgba(52, 152, 219, 0.4);
+    box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
     transition: all 0.2s ease;
     text-transform: uppercase;
-    margin-bottom: 1rem;
 }
 
 .playAgainBtn:hover {
@@ -161,17 +157,41 @@
     box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
 }
 
+.buttonGroup {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
 .homeBtn {
-    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 2.5rem;
+    font-size: clamp(1rem, 3vh, 1.5rem);
+    font-weight: 900;
+    color: white;
+    background: #94a3b8;
+    /* Slate color for secondary action */
     border: none;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 1rem;
+    border-radius: 1rem;
     cursor: pointer;
-    text-decoration: underline;
+    box-shadow: 0 10px 20px rgba(148, 163, 184, 0.3);
+    transition: all 0.2s ease;
+    text-transform: uppercase;
 }
 
 .homeBtn:hover {
-    color: white;
+    background: #64748b;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
+}
+
+.homeBtn:active {
+    transform: scale(0.95);
 }
 
 @keyframes fadeIn {

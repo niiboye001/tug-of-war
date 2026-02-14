@@ -15,6 +15,10 @@ interface CenterPanelProps {
     onHome: () => void;
     bluePower?: boolean;
     redPower?: boolean;
+    blueFrozen?: boolean;
+    redFrozen?: boolean;
+    blueShield?: boolean;
+    redShield?: boolean;
 }
 
 const CenterPanel: React.FC<CenterPanelProps> = ({
@@ -25,7 +29,11 @@ const CenterPanel: React.FC<CenterPanelProps> = ({
     team2Score,
     onHome,
     bluePower = false,
-    redPower = false
+    redPower = false,
+    blueFrozen = false,
+    redFrozen = false,
+    blueShield = false,
+    redShield = false
 }) => {
     const [points, setPoints] = useState<{ id: number; x: number; y: number; val: string }[]>([]);
     const nextId = React.useRef(0);
@@ -134,6 +142,13 @@ const CenterPanel: React.FC<CenterPanelProps> = ({
                             ⚡ SUPER PULL ⚡
                         </motion.div>
                     )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                    {blueFrozen && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={`${styles.effectOverlay} ${styles.blueFrozen}`}>🧊 FROZEN</motion.div>}
+                    {redFrozen && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={`${styles.effectOverlay} ${styles.redFrozen}`}>🧊 FROZEN</motion.div>}
+                    {blueShield && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={`${styles.effectOverlay} ${styles.blueShield}`}>🛡️ SHIELD</motion.div>}
+                    {redShield && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={`${styles.effectOverlay} ${styles.redShield}`}>🛡️ SHIELD</motion.div>}
                 </AnimatePresence>
 
                 <motion.div

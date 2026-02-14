@@ -13,16 +13,30 @@
     background-color: white;
     border-radius: 1rem;
     font-size: 1.8rem;
-    /* Scaled up */
     font-weight: 800;
     color: #1e293b;
     border: 1px solid rgba(0, 0, 0, 0.05);
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     transition: all 0.1s ease;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    position: relative;
+    /* Added for hint positioning */
+}
+
+.keyHint {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 0.7rem;
+    opacity: 0.5;
+    background: rgba(0, 0, 0, 0.05);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 600;
 }
 
 .key:active {

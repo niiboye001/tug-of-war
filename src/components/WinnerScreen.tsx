@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styles from './WinnerScreen.module.css';
-import { Trophy, RefreshCw, CheckCircle, Clock } from 'lucide-react';
+import { Trophy, RefreshCw, CheckCircle, Clock, Home } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { playWin } from '../utils/sound';
 
@@ -91,7 +91,8 @@ const WinnerScreen: React.FC<WinnerScreenProps> = ({
 
                     {/* Home button is not prominent in screenshot but keeping it accessible */}
                     <button className={styles.homeBtn} onClick={onHome}>
-                        Home
+                        <Home size={24} />
+                        HOME
                     </button>
                 </div>
             </div>

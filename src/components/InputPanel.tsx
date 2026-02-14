@@ -10,15 +10,19 @@ interface InputPanelProps {
     onInput: (value: string) => void;
     onDelete: () => void;
     onSubmit: () => void;
+    team: 'blue' | 'red';
 }
 
-const InputPanel: React.FC<InputPanelProps> = ({ mode, options = [], onInput, onDelete, onSubmit }) => {
+const InputPanel: React.FC<InputPanelProps> = ({ mode, options = [], onInput, onDelete, onSubmit, team }) => {
     if (mode === 'math') {
-        const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+        const numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9']; // 1-9
+        const teamHints = team === 'blue'
+            ? ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'BS', 'Ent']
+            : ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']'];
 
         return (
             <div className={styles.keypadGrid}>
-                {numbers.slice(0, 9).map((num) => (
+                {numbers.map((num, i) => (
                     <motion.button
                         key={num}
                         className={styles.key}
@@ -27,6 +31,7 @@ const InputPanel: React.FC<InputPanelProps> = ({ mode, options = [], onInput, on
                         transition={{ duration: 0.1 }}
                     >
                         {num}
+                        <span className={styles.keyHint}>{teamHints[i]}</span>
                     </motion.button>
                 ))}
 
@@ -37,6 +42,7 @@ const InputPanel: React.FC<InputPanelProps> = ({ mode, options = [], onInput, on
                     transition={{ duration: 0.1 }}
                 >
                     <Delete size={24} />
+                    <span className={styles.keyHint}>{teamHints[10]}</span>
                 </motion.button>
 
                 <motion.button
@@ -46,6 +52,7 @@ const InputPanel: React.FC<InputPanelProps> = ({ mode, options = [], onInput, on
                     transition={{ duration: 0.1 }}
                 >
                     0
+                    <span className={styles.keyHint}>{teamHints[9]}</span>
                 </motion.button>
 
                 <motion.button
@@ -55,12 +62,15 @@ const InputPanel: React.FC<InputPanelProps> = ({ mode, options = [], onInput, on
                     transition={{ duration: 0.1 }}
                 >
                     <Check size={24} />
+                    <span className={styles.keyHint}>{teamHints[11]}</span>
                 </motion.button>
             </div>
         );
     }
 
     // English Mode (Option Grid)
+    const englishHints = team === 'blue' ? ['1', '2', '3', '4'] : ['Q', 'W', 'E', 'R'];
+
     return (
         <div className={styles.optionGrid}>
             {options.map((option, index) => (
@@ -69,9 +79,13 @@ const InputPanel: React.FC<InputPanelProps> = ({ mode, options = [], onInput, on
                     className={styles.optionBtn}
                     onClick={() => { playClick(); onInput(option); }}
                     whileTap={{ scale: 0.95 }}
+                    style={{ position: 'relative' }}
                     transition={{ duration: 0.1 }}
                 >
                     {option}
+                    <span className={styles.keyHint} style={{ position: 'absolute', top: '5px', right: '10px' }}>
+                        {englishHints[index]}
+                    </span>
                 </motion.button>
             ))}
         </div>

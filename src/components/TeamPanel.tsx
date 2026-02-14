@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styles from './TeamPanel.module.css';
 import InputPanel from './InputPanel';
-import { generateProblem, type GameMode, type Problem, type Difficulty } from '../utils/gameLogic';
+import { generateProblem, type GameMode, type Problem, type Difficulty, type PowerUp } from '../utils/gameLogic';
 import { motion, AnimatePresence } from 'framer-motion';
-import { playCorrect, playWrong } from '../utils/sound';
-import { Star } from 'lucide-react';
+import { playCorrect, playWrong, playClick } from '../utils/sound';
+import { Star, Snowflake, Shield, Zap } from 'lucide-react';
 
 interface TeamPanelProps {
     team: 'blue' | 'red';
@@ -14,21 +14,91 @@ interface TeamPanelProps {
     onStreak?: (streak: number) => void;
     isActive: boolean;
     isSolo?: boolean;
+    powerUps?: PowerUp[];
+    onActivatePowerUp?: (powerUp: PowerUp) => void;
 }
 
-const TeamPanel: React.FC<TeamPanelProps> = ({ team, gameMode, difficulty, onCorrectAnswer, onStreak, isActive, isSolo = false }) => {
+const TeamPanel: React.FC<TeamPanelProps> = ({
+    team, gameMode, difficulty, onCorrectAnswer, onStreak, isActive, isSolo = false,
+    powerUps = [], onActivatePowerUp
+}) => {
     const [problem, setProblem] = useState<Problem>({ question: '', answer: '' });
     const [userInput, setUserInput] = useState('');
     const [feedback, setFeedback] = useState<'none' | 'correct' | 'wrong'>('none');
     const [streak, setStreak] = useState(0);
+    const [usedWords, setUsedWords] = useState<string[]>([]);
 
     useEffect(() => {
         if (isActive) {
-            setProblem(generateProblem(gameMode, difficulty));
+            const newUsedWords: string[] = [];
+            const newProblem = generateProblem(gameMode, difficulty, newUsedWords);
+            setProblem(newProblem);
+
+            if (gameMode === 'english') {
+                const word = newProblem.question.replace('_', newProblem.answer);
+                setUsedWords([word]);
+            }
+
             setUserInput('');
             setFeedback('none');
         }
     }, [gameMode, difficulty, isActive]);
+
+    useEffect(() => {
+        if (!isActive || isSolo) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            const key = e.key.toLowerCase();
+
+            if (team === 'blue') {
+                // Team 1 Mapping: 1-0, Backspace, Enter
+                if (gameMode === 'math') {
+                    if (/^[0-9]$/.test(key)) {
+                        handleInput(key);
+                    } else if (key === 'backspace') {
+                        handleDelete();
+                    } else if (key === 'enter') {
+                        handleSubmit();
+                    }
+                } else {
+                    // English options: 1, 2, 3, 4
+                    if (['1', '2', '3', '4'].includes(key)) {
+                        const idx = parseInt(key) - 1;
+                        if (problem.options && problem.options[idx]) {
+                            handleInput(problem.options[idx]);
+                        }
+                    }
+                }
+            } else {
+                // Team 2 Mapping: Q-P row for 1-0, [, ]
+                if (gameMode === 'math') {
+                    const redKeys: { [key: string]: string } = {
+                        'q': '1', 'w': '2', 'e': '3', 'r': '4', 't': '5',
+                        'y': '6', 'u': '7', 'i': '8', 'o': '9', 'p': '0'
+                    };
+                    if (redKeys[key]) {
+                        handleInput(redKeys[key]);
+                    } else if (key === '[') {
+                        handleDelete();
+                    } else if (key === ']') {
+                        handleSubmit();
+                    }
+                } else {
+                    // English options: Q, W, E, R
+                    const redOptionKeys: { [key: string]: number } = { 'q': 0, 'w': 1, 'e': 2, 'r': 3 };
+                    if (redOptionKeys[key] !== undefined) {
+                        const idx = redOptionKeys[key];
+                        if (problem.options && problem.options[idx]) {
+                            handleInput(problem.options[idx]);
+                        }
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isActive, isSolo, team, gameMode, problem]);
 
     const handleInput = (val: string) => {
         if (feedback !== 'none') return;
@@ -52,6 +122,10 @@ const TeamPanel: React.FC<TeamPanelProps> = ({ team, gameMode, difficulty, onCor
         }
     };
 
+    const handleDelete = () => {
+        setUserInput(prev => prev.slice(0, -1));
+    };
+
     const handleCorrect = () => {
         playCorrect();
         const newStreak = streak + 1;
@@ -61,7 +135,14 @@ const TeamPanel: React.FC<TeamPanelProps> = ({ team, gameMode, difficulty, onCor
         setFeedback('correct');
         onCorrectAnswer();
         setTimeout(() => {
-            setProblem(generateProblem(gameMode, difficulty));
+            const newProblem = generateProblem(gameMode, difficulty, usedWords);
+            setProblem(newProblem);
+
+            if (gameMode === 'english') {
+                const word = newProblem.question.replace('_', newProblem.answer);
+                setUsedWords(prev => [...prev, word]);
+            }
+
             setUserInput('');
             setFeedback('none');
         }, 500);
@@ -74,14 +155,17 @@ const TeamPanel: React.FC<TeamPanelProps> = ({ team, gameMode, difficulty, onCor
 
         setFeedback('wrong');
         setTimeout(() => {
-            setProblem(generateProblem(gameMode, difficulty));
+            const newProblem = generateProblem(gameMode, difficulty, usedWords);
+            setProblem(newProblem);
+
+            if (gameMode === 'english') {
+                const word = newProblem.question.replace('_', newProblem.answer);
+                setUsedWords(prev => [...prev, word]);
+            }
+
             setUserInput('');
             setFeedback('none');
         }, 500);
-    };
-
-    const handleDelete = () => {
-        setUserInput(prev => prev.slice(0, -1));
     };
 
     const containerVariants = {
@@ -94,6 +178,15 @@ const TeamPanel: React.FC<TeamPanelProps> = ({ team, gameMode, difficulty, onCor
         wrong: {
             x: [-10, 10, -10, 10, 0],
             transition: { duration: 0.4 }
+        }
+    };
+
+    const getPowerUpIcon = (type: string) => {
+        switch (type) {
+            case 'freeze': return <Snowflake size={16} />;
+            case 'shield': return <Shield size={16} />;
+            case 'double_pull': return <Zap size={16} />;
+            default: return null;
         }
     };
 
@@ -125,7 +218,7 @@ const TeamPanel: React.FC<TeamPanelProps> = ({ team, gameMode, difficulty, onCor
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.2 }}
-                        className={styles.question}
+                        className={`${styles.question} ${problem.question.length > 10 ? styles.longText : ''}`}
                     >
                         {isSolo ? (
                             <div className={styles.aiStatus}>
@@ -138,6 +231,29 @@ const TeamPanel: React.FC<TeamPanelProps> = ({ team, gameMode, difficulty, onCor
                 {!isSolo && gameMode === 'math' && (
                     <div className={styles.inputPreview}>{userInput}</div>
                 )}
+                {!isActive && (
+                    <div className={styles.frozenOverlay}>🧊 FROZEN!</div>
+                )}
+            </div>
+
+            <div className={styles.powerupInventory}>
+                <AnimatePresence>
+                    {powerUps.map((p) => (
+                        <motion.button
+                            key={p.id}
+                            initial={{ scale: 0, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0, opacity: 0 }}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            className={`${styles.powerUpBtn} ${styles[p.type]}`}
+                            onClick={() => { playClick(); onActivatePowerUp?.(p); }}
+                            title={`Activate ${p.type.replace('_', ' ')}`}
+                        >
+                            {getPowerUpIcon(p.type)}
+                        </motion.button>
+                    ))}
+                </AnimatePresence>
             </div>
 
             <div className={styles.inputArea}>
@@ -148,6 +264,7 @@ const TeamPanel: React.FC<TeamPanelProps> = ({ team, gameMode, difficulty, onCor
                         onInput={handleInput}
                         onDelete={handleDelete}
                         onSubmit={handleSubmit}
+                        team={team}
                     />
                 ) : (
                     <div style={{ textAlign: 'center', opacity: 0.5, padding: '2rem' }}>

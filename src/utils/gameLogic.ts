@@ -1,6 +1,13 @@
 export type GameMode = 'math' | 'english';
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'insane';
 export type Theme = 'park' | 'space' | 'arctic';
+export type PowerUpType = 'freeze' | 'shield' | 'double_pull';
+export type Side = 'blue' | 'red';
+
+export interface PowerUp {
+    id: string;
+    type: PowerUpType;
+}
 
 export interface Problem {
     question: string;
@@ -9,10 +16,26 @@ export interface Problem {
 }
 
 const WORDS = {
-    easy: ['CAT', 'DOG', 'SUN', 'RED', 'BLUE', 'TREE', 'BOOK', 'FISH', 'BALL', 'CAKE'],
-    medium: ['APPLE', 'BANANA', 'CHERRY', 'GRAPE', 'LEMON', 'MANGO', 'ORANGE', 'PEACH', 'ZEBRA', 'PANDA'],
-    hard: ['ELEPHANT', 'GIRAFFE', 'MOUNTAIN', 'COMPUTER', 'DIAMOND', 'DINOSAUR', 'RAINBOW', 'SQUIRREL', 'PLATYPUS', 'ASTRONAUT'],
-    insane: ['ARCHITECTURE', 'ENTREPRENEUR', 'PHILANTHROPY', 'EXTRAORDINARY', 'REVOLUTIONARY', 'METAMORPHOSIS', 'ENVIRONMENTAL', 'COMMUNICATION', 'SYCHRONIZATION', 'CONSCIOUSNESS']
+    easy: [
+        'CAT', 'DOG', 'SUN', 'RED', 'BLUE', 'TREE', 'BOOK', 'FISH', 'BALL', 'CAKE',
+        'FROG', 'BIRD', 'MILK', 'COLD', 'FAST', 'SLOW', 'JUMP', 'CHAT', 'STAR', 'MOON',
+        'DUCK', 'LION', 'BEAR', 'SHIP', 'BOAT', 'FIRE', 'WIND', 'RAIN', 'SNOW', 'GLAD'
+    ],
+    medium: [
+        'APPLE', 'BANANA', 'CHERRY', 'GRAPE', 'LEMON', 'MANGO', 'ORANGE', 'PEACH', 'ZEBRA', 'PANDA',
+        'GUITAR', 'PLANT', 'WINDOW', 'BOTTLE', 'FLOWER', 'BRIDGE', 'CASTLE', 'ROCKET', 'FOREST', 'DESERT',
+        'TURTLE', 'RABBIT', 'COFFEE', 'WHEEL', 'HAMMER', 'JOURNAL', 'MARKET', 'OFFICE', 'POCKET', 'SCHOOL'
+    ],
+    hard: [
+        'ELEPHANT', 'GIRAFFE', 'MOUNTAIN', 'COMPUTER', 'DIAMOND', 'DINOSAUR', 'RAINBOW', 'SQUIRREL', 'PLATYPUS', 'ASTRONAUT',
+        'EXPLORE', 'FREEDOM', 'GALAXY', 'HARMONY', 'INSPIRE', 'JOURNEY', 'KINGDOM', 'LANTERN', 'MYSTERY', 'NEPTUNE',
+        'OPTIMISM', 'PYRAMID', 'QUANTUM', 'RECOVERY', 'SOLITUDE', 'TRIUMPH', 'UNIVERSE', 'VICTORY', 'WHISPER', 'XENON'
+    ],
+    insane: [
+        'ARCHITECTURE', 'ENTREPRENEUR', 'PHILANTHROPY', 'EXTRAORDINARY', 'REVOLUTIONARY', 'METAMORPHOSIS', 'ENVIRONMENTAL', 'COMMUNICATION', 'SYCHRONIZATION', 'CONSCIOUSNESS',
+        'ASTROPHYSICS', 'BIOCHEMISTRY', 'CRYPTOGRAPHY', 'CYBERSECURITY', 'EPIDEMIOLOGY', 'FLUORESCENCE', 'GENETICS', 'HIEROGLYPHICS', 'IMMUNOLOGY', 'JURISPRUDENCE',
+        'KALEIDOSCOPE', 'LINGUISTICS', 'MICROBIOLOGY', 'NEUROSCIENCE', 'OCEANOGRAPHY', 'PALEONTOLOGY', 'QUANTIFICATION', 'RADIOLOGY', 'SOCIOLOGY', 'THERMODYNAMICS'
+    ]
 };
 
 export const generateMathProblem = (difficulty: Difficulty): Problem => {
@@ -68,11 +91,16 @@ export const generateMathProblem = (difficulty: Difficulty): Problem => {
     };
 };
 
-export const generateEnglishProblem = (difficulty: Difficulty): Problem => {
-    const wordList = WORDS[difficulty];
-    const word = wordList[Math.floor(Math.random() * wordList.length)];
+export const generateEnglishProblem = (difficulty: Difficulty, exclude: string[] = []): Problem => {
+    let wordList = WORDS[difficulty];
 
-    // Insane mode might mask two letters? No, let's stick to one but make the word hard.
+    // Filter out excluded words
+    const availableWords = wordList.filter(w => !exclude.includes(w));
+
+    // If all words are used, reset but keep simple randomization
+    const listToPickFrom = availableWords.length > 0 ? availableWords : wordList;
+    const word = listToPickFrom[Math.floor(Math.random() * listToPickFrom.length)];
+
     const maskIndex = Math.floor(Math.random() * word.length);
     const answer = word[maskIndex];
     const question = word.substring(0, maskIndex) + '_' + word.substring(maskIndex + 1);
@@ -92,6 +120,6 @@ export const generateEnglishProblem = (difficulty: Difficulty): Problem => {
     };
 };
 
-export const generateProblem = (mode: GameMode, difficulty: Difficulty): Problem => {
-    return mode === 'math' ? generateMathProblem(difficulty) : generateEnglishProblem(difficulty);
+export const generateProblem = (mode: GameMode, difficulty: Difficulty, exclude: string[] = []): Problem => {
+    return mode === 'math' ? generateMathProblem(difficulty) : generateEnglishProblem(difficulty, exclude);
 };

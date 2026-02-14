@@ -7,12 +7,13 @@
 }
 
 .panel {
-    flex: 1;
+    flex: 1 1 25%;
     display: flex;
     flex-direction: column;
-    padding: 1rem;
+    padding: 0.5rem;
     z-index: 10;
     transition: transform 0.3s ease;
+    overflow-y: auto;
 }
 
 .shake {
@@ -54,7 +55,10 @@
 }
 
 .centerPanel {
-    flex: 2;
+    flex: 2 1 50%;
+    /* Changed from flex: 2 */
+    min-width: 400px;
+    /* Added */
     position: relative;
     display: flex;
     flex-direction: column;
